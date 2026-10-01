@@ -1,32 +1,102 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Alert } from "@/design-system/components/alert";
 import { Card } from "@/design-system/components/card";
 import { MetricCard } from "@/design-system/components/metric-card";
 import { StatusBadge } from "@/design-system/components/status-badge";
-import { ask, getDemoQuestions, getHeadline } from "@/lib/rag/demo";
-import corpusJson from "@/lib/rag/corpus.json";
+import { getDemoQuestions, getHeadline } from "@/lib/rag/demo";
 
 const HEADLINE = getHeadline();
 const QUESTIONS = getDemoQuestions();
-const CORPUS = corpusJson as readonly { id: string; docId: string; section: string; text: string }[];
-const chunkText = (id: string) => CORPUS.find((c) => c.id === id)?.text ?? "";
 
 const pct = (v: number) => `${(v * 100).toFixed(0)}%`;
 
 const PRE = QUESTIONS[0]?.query ?? "";
 
+interface ChunkText {
+  id: string;
+  text: string;
+}
+
+interface Verdict {
+  chunkId: string;
+  grounded: boolean;
+  supported: boolean;
+  support: number;
+}
+
+interface AskResult {
+  query?: string;
+  status: "answered" | "refused";
+  text: string;
+  retrieved: string[];
+  chunks: ChunkText[];
+  verdicts: Verdict[];
+  attribution: number;
+  persisted?: boolean;
+  error?: string;
+}
+
+interface HistoryItem {
+  id: number;
+  query: string;
+  status: string;
+  attribution: number;
+  created_at: string;
+}
+
 export default function AppPage() {
   const [query, setQuery] = useState(PRE);
   const [hallucinate, setHallucinate] = useState(false);
-  const [result, setResult] = useState<ReturnType<typeof ask> | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<AskResult | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
 
-  function run() {
+  async function run() {
     if (!query.trim()) return;
-    setResult(ask(query, hallucinate));
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: query, hallucinate }),
+      });
+      const data = await res.json();
+      setResult(data);
+      if (res.ok) loadHistory();
+    } catch (err) {
+      setResult({
+        status: "refused",
+        text: "",
+        retrieved: [],
+        chunks: [],
+        verdicts: [],
+        attribution: 1,
+        error: err instanceof Error ? err.message : "Error de red",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
+
+  async function loadHistory() {
+    try {
+      const res = await fetch("/api/history");
+      if (res.ok) {
+        const data = await res.json();
+        setHistory(data.answers ?? []);
+      }
+    } catch {
+      /* history is best-effort */
+    }
+  }
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
 
   const ungrounded = result ? result.verdicts.filter((v) => !v.grounded).length : 0;
 
@@ -57,8 +127,8 @@ export default function AppPage() {
               </div>
             </div>
           </div>
-          <StatusBadge tone="info" dot className="px-3 py-1">
-            Demo mode
+          <StatusBadge tone="success" dot className="px-3 py-1">
+            Postgres en vivo
           </StatusBadge>
         </div>
       </header>
@@ -77,7 +147,8 @@ export default function AppPage() {
           <h2 className="text-lg font-semibold tracking-tight text-foreground mb-1">Preguntas y respuestas en vivo</h2>
           <p className="text-sm text-muted-foreground mb-5">
             Haz una pregunta sobre el corpus y comprueba que cada cita apunta a un chunk realmente
-            recuperado. Activa &quot;simular alucinación&quot; para forzar una cita sin base.
+            recuperado. Activa &quot;simular alucinación&quot; para forzar una cita sin base. Cada
+            respuesta queda guardada en Postgres.
           </p>
 
           <Card className="p-4 space-y-4">
@@ -97,9 +168,10 @@ export default function AppPage() {
             <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={run}
-                className="rounded-[var(--radius-md)] bg-accent px-4 py-2.5 text-sm font-medium text-[#ffffff] hover:bg-accent/90 transition-colors"
+                disabled={loading}
+                className="rounded-[var(--radius-md)] bg-accent px-4 py-2.5 text-sm font-medium text-[#ffffff] hover:bg-accent/90 transition-colors disabled:opacity-50"
               >
-                Responder
+                {loading ? "Respondiendo…" : "Responder"}
               </button>
               <label className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
                 <input
@@ -113,7 +185,9 @@ export default function AppPage() {
             </div>
           </Card>
 
-          {result && (
+          {result?.error && <Alert tone="danger" title="No se pudo responder" className="mt-4">{result.error}</Alert>}
+
+          {result && !result.error && (
             <div className="mt-4 space-y-4">
               <Card className="p-5">
                 <div className="mb-3 flex items-center gap-3">
@@ -136,10 +210,10 @@ export default function AppPage() {
                   Chunks recuperados
                 </p>
                 <ul className="space-y-2">
-                  {result.retrieved.map((id) => (
-                    <li key={id} className="flex items-start gap-2 text-sm">
-                      <span className="mt-0.5 shrink-0 font-mono text-xs text-muted-foreground">[{id}]</span>
-                      <span className="text-muted-foreground">{chunkText(id)}</span>
+                  {result.chunks.map((c) => (
+                    <li key={c.id} className="flex items-start gap-2 text-sm">
+                      <span className="mt-0.5 shrink-0 font-mono text-xs text-muted-foreground">[{c.id}]</span>
+                      <span className="text-muted-foreground">{c.text}</span>
                     </li>
                   ))}
                 </ul>
@@ -171,8 +245,39 @@ export default function AppPage() {
           )}
         </section>
 
+        {/* ── HISTORY ─────────────────────────── */}
+        {history.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold text-foreground mb-3">Historial de respuestas (persistido en Postgres)</h3>
+            <div className="overflow-x-auto rounded-[var(--radius-md)] shadow-[var(--shadow-card)] bg-card">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--border)] bg-[var(--gray-50)]">
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pregunta</th>
+                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Estado</th>
+                    <th scope="col" className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Atribución</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--border)]">
+                  {history.map((h) => (
+                    <tr key={h.id} className="cursor-pointer hover:bg-muted/40" onClick={() => setQuery(h.query)}>
+                      <td className="px-4 py-2.5 text-foreground">{h.query}</td>
+                      <td className="px-4 py-2.5">
+                        <StatusBadge tone={h.status === "answered" ? "success" : "warning"}>
+                          {h.status === "answered" ? "respondida" : "rehusada"}
+                        </StatusBadge>
+                      </td>
+                      <td className="px-4 py-2.5 text-right tabular-nums text-foreground">{pct(Number(h.attribution))}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
         <footer className="pt-8 border-t border-[var(--border)] flex items-center justify-between text-xs text-muted-foreground">
-          <span>Evidencia · RAG con citas verificadas · Demo mode</span>
+          <span>Evidencia · RAG con citas verificadas · Postgres en vivo</span>
           <a href="https://github.com/mdeasis27/evidencia" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors font-mono">GitHub</a>
         </footer>
       </div>
