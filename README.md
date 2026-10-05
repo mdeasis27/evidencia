@@ -1,90 +1,96 @@
-# Evidencia
+# Grounded answers
 
-**Document Q&A with hybrid retrieval and citation verification.** Every claim must
-cite a retrieved chunk, and every citation is mechanically checked for grounding
-and lexical support before it reaches the reader. Runs fully offline in demo
-mode.
+[Español](README.es.md) · [Try the demo](https://evidencia-manueldeasis27-2515s-projects.vercel.app/en/app) · [Case study](https://manueldeasis.com/en/projects/evidencia) · [Source](https://github.com/mdeasis27/evidencia)
 
-> **Result:** Honest answers achieve **100% citation attribution** (every citation
-> resolves to a retrieved chunk). A simulated hallucination that cites a chunk it
-> never retrieved drops attribution to **75%** and is flagged by the verifier
-> rather than shipped. Retrieval is hybrid BM25 + TF-IDF fused with reciprocal
-> rank fusion over a 16-chunk fintech compliance corpus.
+![Actual interactive local interface](docs/images/cover.png)
 
----
+Edit a local corpus, ask a question and inspect retrieved passages and citations.
 
-## Result
+## Two situations to compare
 
-| Measure | Value |
-|---|---|
-| Attribution (honest) | **100%** (all citations grounded) |
-| Attribution (simulated hallucination) | **75%** (1 of 4 citations ungrounded → flagged) |
-| Corpus | 16 compliance chunks (credit, identity, fraud, limits) |
-| Retrieval | hybrid BM25 + TF-IDF, RRF |
+**Supported claim:** Support center question with local support passage The cited local passage supports the answer.
 
-### What the guard catches
+![Supported claim](docs/images/scenario-a.png)
 
-The demo has a "simulate hallucination" toggle. It appends a citation to a chunk
-that was **not** in the retrieved set. The verifier marks it `grounded: false`
-and the attribution rate drops — this is the mechanical control that stops a
-claim whose source doesn't exist from shipping.
+**Missing evidence:** Refund question with no refund passage The strict workflow refuses the claim.
 
-The verification is two-fold (see `lib/rag/citations.ts`):
+![Missing evidence](docs/images/scenario-b.png)
 
-1. **Grounding** — the cited chunk id must be in the retrieved set. Free, exact,
-   catches fabricated citations.
-2. **Lexical span support** — the claim's content words must appear in the cited
-   chunk. A deterministic proxy; a production system swaps this for an NLI/LLM
-   judge (see *Tradeoffs*).
+## Business use case
 
----
+A claim must be tied to retrieved local passages.
+
+**Who uses it:** Evidence reviewer.
+
+**The decision:** Answer or refuse.
+
+Extract terms, retrieve passages, verify citations, then answer or refuse.
+
+### Try the decision
+
+**Supported claim:** Support center question with local support passage The cited local passage supports the answer.
+
+**Missing evidence:** Refund question with no refund passage The strict workflow refuses the claim.
+
+Choose a scenario, edit its controls and run the local computation. Step through the visual process or reveal all steps. Reset before comparing the second scenario.
+
+## How to try it
+
+Open `/en/app` (English, default) or `/es/app` (Spanish). Change the scenario inputs and run the computation. Inspect the resulting decision, evidence and computed trace. Playback reveals completed local steps; it does not measure a live model. Reset starts a new local scenario. Changing language resets the scenario.
+
+The primary demo needs no account, API key or database. Public links refer to the existing deployment; local redesign changes are pending publication.
+
+<!-- recruiter-mission:start -->
+### Your interactive mission
+
+Choose partial evidence, predict whether the selected policy will answer, run retrieval and reveal the full trace.
+
+The same question and corpus are computed under strict and flexible citation coverage. Missing evidence can be refused by both. This is lexical coverage, not proof that a claim is true.
+
+**Why this approach:** Combined lexical retrievers make passages and citations inspectable without API keys. A strict coverage gate trades answer rate for caution, but cannot establish semantic correctness.
+
+**Before production:** Evaluate real support questions, citation quality, privacy, access permissions and unsupported answers before connecting a model.
+
+Editing inputs, choosing a preset or resetting clears the prediction and obsolete results. Comparisons appear only at completed playback; the primary demos need no account or key.
+
+The mission pilot updates this implementation. Existing screenshots and browser reports document the previous stage; fresh browser interaction checks and captures are pending because the current environment blocked them.
+![Recorded comparison from the previous stage](docs/images/mission.png)
+<!-- recruiter-mission:end -->
+
+## Local setup and verification
+
+Requires Node.js 22 and pnpm 10.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm dev
+pnpm test
+node node_modules/typescript/bin/tsc --noEmit --incremental false
+pnpm lint
+pnpm build
+```
+
+Open `http://localhost:3000/en/app`. Recorded validation covers tests, lint, TypeScript and production builds. See [command results](docs/quality/decision-lab-verification.json) and [browser component checks](docs/quality/decision-lab-browser.json). The new browser checks exercise real React components and production CSS with controlled locale navigation; they do not certify Next routes or public deployment.
 
 ## Architecture
 
-```
-lib/rag/
-  retrievers.ts   # BM25, TF-IDF, reciprocal-rank fusion (deterministic)
-  citations.ts    # extractCitationIds, attributionRate, spanSupport, verifyCitations
-  answer.ts       # extractive answerer + a "hallucinating" variant for the demo
-  demo.ts         # wires corpus + retrievers + answerer for the dashboard
-  corpus.json     # 16 compliance chunks (committed)
-  questions.json  # demo questions
-backend/
-  src/evidencia/citations.py   # canonical Python implementation
-  tests/                       # pinned to the same cases as the TS tests
-app/               # Next.js demo dashboard + landing (Vercel, demo mode)
-```
+- `app/[lang]/`: localized browser experience.
+- `lib/experience/`: typed local adapter, validation and run traces.
+- `design-system/`: shared visual tokens, locale controls and execution/replay presentation.
+- `app/api/`: optional server integrations; the primary demo does not require them.
 
-## Design decisions & tradeoffs
+Technology: Next.js 16, TypeScript, Python, Vitest, pytest, Tailwind CSS v4.
 
-1. **Two verification layers.** Grounding is exact and free but only proves the
-   citation resolves; span support proves the claim is *lexically* in the chunk
-   but cannot detect a well-phrased paraphrase of a wrong fact. That gap is the
-   honest boundary of lexical verification — documented, not hidden.
-2. **Same corpus as Veredicto.** The eval harness (Veredicto) and the system
-   being evaluated (Evidencia) share one corpus, so the numbers are comparable
-   across projects. A portfolio that references itself reads as a system.
-3. **Math in two languages.** TS for the browser demo, Python for the
-   authoritative backend — pinned by identical test cases in both suites.
+## Evidence and limitations
 
-## What did not work
+Question evidence connects to retrieved passages and citation identifiers.
 
-- **The extractive answerer is not a real generator.** It returns lead sentences
-  verbatim, so "attribution = 100%" is partly an artifact of extraction (it can
-  only cite what it retrieved). The hallucination toggle exists precisely to
-  prove the guard works when that assumption breaks.
-- **Lexical span support over-rates numeric errors** — same limitation as the
-  Veredicto judge. A wrong number phrased like the source passes span support;
-  only an LLM judge (or schema check) catches it.
+Lexical retrieval and heuristic grounding; unsupported questions refuse.
 
-## Run it
+Shows exact passage IDs and missing support.
 
-```bash
-pnpm install && pnpm dev      # http://localhost:3000
-pnpm test                     # 10 vitest tests
-cd backend && uv sync --extra dev && uv run pytest   # 5 tests
-```
+**Limits:** Uses lexical retrieval over a local corpus. These portfolio prototypes do not claim measured production impact.
 
-## Stack
+Inputs use fictional or anonymized examples. Optional live integrations require their own credentials and operational setup. Secrets belong in the configured secret manager, never in local secret files or Git. Use the existing `infisical run -- <command>` workflow when live integration is needed. This repository does not publish or deploy automatically as part of the local demo.
 
-Next.js 16 · TypeScript · Vitest · Tailwind v4 · Python 3.14 · pytest
+![Actual English demo capture](docs/images/demo.png)

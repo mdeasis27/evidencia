@@ -1,0 +1,15 @@
+{
+  "test": {
+    "count": 16,
+    "exit": 0
+  },
+  "lint": {
+    "exit": 0
+  },
+  "types": {
+    "exit": 0
+  },
+  "build": {
+    "exit": 0
+  }
+}
