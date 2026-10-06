@@ -1,7 +1,5 @@
 import type { Heading } from "@/design-system/demo/project-story";
 
-type NodeCopy = { name: string; sub: string; analogy: string };
-
 export interface EvidenciaStory {
   name: string;
   oneLiner: string;
@@ -13,7 +11,12 @@ export interface EvidenciaStory {
   fit: { heading: Heading; worthLabel: string; worth: string; notLabel: string; not: string };
   proves: { heading: Heading; text: string };
   engineers: { summary: string; points: string[]; repoLabel: string };
-  scene: { title: string; caption: string; statusLabels: { active: string; danger: string; success: string }; tapeLabel: string; nodes: { questions: NodeCopy; student: NodeCopy; cited: NodeCopy; declined: NodeCopy }; tape: { served: string; rerouted: string; lost: string }; wrongOf: (n: number) => string };
+  scene: {
+    title: string; caption: string; tapeLabel: string; tape: { served: string; rerouted: string; lost: string }; wrongOf: (n: number) => string;
+    question: (n: number, total: number) => string; notInManual: string; manual: (pages: number) => string; opens: string; page: (p: number) => string;
+    alsoReads: string; and: string; answerWas: string; answerOn: string; coverageLabel: string; covers: (pct: number) => string; requires: (pct: number) => string;
+    verdict: { served: (p: number) => string; rerouted: string; lost: (p: number) => string };
+  };
 }
 
 export const STORY: Record<"en" | "es", EvidenciaStory> = {
@@ -87,16 +90,22 @@ export const STORY: Record<"en" | "es", EvidenciaStory> = {
     scene: {
       title: "What the assistant did with each question",
       caption: "Watch each question get an answer with its page, or an honest \"I'm not sure\".",
-      statusLabels: { active: "reading", success: "right page", danger: "wrong page" },
       tapeLabel: "Twenty-four questions, in order",
-      nodes: {
-        questions: { name: "Questions", sub: "24 about the manual", analogy: "the exam" },
-        student: { name: "Assistant", sub: "reads and cites", analogy: "the student" },
-        cited: { name: "Answered", sub: "with its passages", analogy: "the page number" },
-        declined: { name: "Not sure", sub: "coverage too low", analogy: "\"I don't know\"" },
-      },
       tape: { served: "right page", rerouted: "not sure", lost: "wrong page" },
       wrongOf: (n) => `Answers from the wrong page: ${n}`,
+      question: (n, total) => `Question ${n} of ${total}`,
+      notInManual: "not in the manual",
+      manual: (pages) => `Manual, ${pages} pages`,
+      opens: "Opens page",
+      page: (p) => `p. ${p}`,
+      alsoReads: "also reads",
+      and: "and",
+      answerWas: "the answer was",
+      answerOn: "on p.",
+      coverageLabel: "How much of the question the pages it opens cover",
+      covers: (pct) => `covers ${pct}%`,
+      requires: (pct) => `requires ${pct}%`,
+      verdict: { served: (p) => `Answers: "it's on page ${p}"`, rerouted: "\"I'm not sure\"", lost: (p) => `Cites page ${p}, the wrong one` },
     },
   },
   es: {
@@ -169,16 +178,22 @@ export const STORY: Record<"en" | "es", EvidenciaStory> = {
     scene: {
       title: "Lo que hizo el asistente con cada pregunta",
       caption: "Mira cómo cada pregunta recibe una respuesta con su página o un \"no estoy seguro\" honesto.",
-      statusLabels: { active: "leyendo", success: "página correcta", danger: "página equivocada" },
       tapeLabel: "Veinticuatro preguntas, en orden",
-      nodes: {
-        questions: { name: "Preguntas", sub: "24 sobre el manual", analogy: "el examen" },
-        student: { name: "Asistente", sub: "lee y cita", analogy: "el alumno" },
-        cited: { name: "Respondida", sub: "con sus pasajes", analogy: "el número de página" },
-        declined: { name: "No seguro", sub: "cobertura baja", analogy: "\"no sé\"" },
-      },
       tape: { served: "página correcta", rerouted: "no estaba seguro", lost: "página equivocada" },
       wrongOf: (n) => `Respuestas con la página equivocada: ${n}`,
+      question: (n, total) => `Pregunta ${n} de ${total}`,
+      notInManual: "no está en el manual",
+      manual: (pages) => `Manual, ${pages} páginas`,
+      opens: "Abre la página",
+      page: (p) => `pág. ${p}`,
+      alsoReads: "también hojea",
+      and: "y",
+      answerWas: "la respuesta estaba",
+      answerOn: "en la pág.",
+      coverageLabel: "Cuánto de la pregunta cubren las páginas que abre",
+      covers: (pct) => `cubre ${pct}%`,
+      requires: (pct) => `exige ${pct}%`,
+      verdict: { served: (p) => `Responde: "está en la pág. ${p}"`, rerouted: "\"No estoy seguro\"", lost: (p) => `Cita la pág. ${p}, equivocada` },
     },
   },
 };

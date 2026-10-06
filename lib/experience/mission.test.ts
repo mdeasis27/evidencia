@@ -22,12 +22,21 @@ it("sweep: both bet answers are reachable on the slider, and the default says no
   expect(count(0.3).lost === 0).toBe(false);
 });
 
-it("runs the mission against no gate, reveals in groups and stops when cancelled", async () => {
+it("keeps what each answer opened, how much it covered and where the answer really was", () => {
+  const items = checkAnswers(0.3);
+  const q14 = items.find(i => i.id === "q14");
+  expect(q14).toMatchObject({ status: "lost", retrieved: ["c07", "c08", "c12"], relevant: ["c13"] });
+  expect(q14?.coverage).toBeCloseTo(0.33, 2);
+  expect(items.find(i => i.id === "q22")).toMatchObject({ status: "rerouted", relevant: [], coverage: 0 });
+  expect(items.find(i => i.id === "q01")).toMatchObject({ status: "served", retrieved: ["c01", "c02", "c14"], relevant: ["c01"] });
+});
+
+it("runs the mission against no gate, reveals one question per step and stops when cancelled", async () => {
   const ids: string[] = [];
   const run = await runMission({ minCoverage: 0.3 }, new AbortController().signal, e => ids.push(e.id));
   expect(run.result.items).toHaveLength(24);
   expect(run.result.comparison).toEqual({ mine: 1, ungated: 3 });
-  expect(ids).toHaveLength(4);
+  expect(ids).toHaveLength(24);
   const c = new AbortController(); c.abort();
   await expect(runMission({ minCoverage: 0.3 }, c.signal, () => {})).rejects.toThrow();
 });
