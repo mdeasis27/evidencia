@@ -18,7 +18,7 @@ export interface EvidenciaStory {
 
 export const STORY: Record<"en" | "es", EvidenciaStory> = {
   en: {
-    name: "Cited answers",
+    name: "Grounded answers",
     oneLiner: "If it can't point to the page the answer came from, it should say it doesn't know.",
     chips: ["Answers with sources", "2 min", "Live demo"],
     analogy: {
