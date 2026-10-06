@@ -1,0 +1,245 @@
+{
+  "topK": 3,
+  "questions": [
+    {
+      "id": "q01",
+      "query": "¿Cuál es la tasa de interés de mora para créditos de consumo?",
+      "retrievedTexts": [
+        "La tasa de interés de mora para créditos de consumo es del 12 por ciento efectivo anual. Esta tasa se aplica únicamente sobre el saldo vencido.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito."
+      ],
+      "coverage": 0.8571428571428571
+    },
+    {
+      "id": "q02",
+      "query": "¿Cuál es el plazo máximo de un crédito de consumo?",
+      "retrievedTexts": [
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble.",
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito."
+      ],
+      "coverage": 0.8
+    },
+    {
+      "id": "q03",
+      "query": "¿Qué enganche se requiere para un crédito hipotecario?",
+      "retrievedTexts": [
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "El umbral de similitud facial para confirmar identidad es de 0.90. Por debajo de 0.60 la verificación falla y se solicita un nuevo intento."
+      ],
+      "coverage": 1
+    },
+    {
+      "id": "q04",
+      "query": "¿Qué documentos debo presentar para pedir un crédito de consumo?",
+      "retrievedTexts": [
+        "Para solicitar un crédito de consumo el cliente debe presentar identificación oficial vigente, comprobante de ingresos de los últimos tres meses y no estar reportado en centrales de riesgo.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito."
+      ],
+      "coverage": 0.5714285714285714
+    },
+    {
+      "id": "q05",
+      "query": "¿Cuál es el score mínimo para aprobación automática?",
+      "retrievedTexts": [
+        "El score de crédito mínimo para aprobación automática es 680 puntos. Entre 600 y 679 puntos el caso pasa a revisión manual por un analista.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble."
+      ],
+      "coverage": 0.8333333333333334
+    },
+    {
+      "id": "q06",
+      "query": "¿Qué pasa si una persona aparece en listas PEP?",
+      "retrievedTexts": [
+        "Un reporte de sanciones internacionales o la aparición en listas PEP es causa de rechazo automático, sin importar el score de crédito.",
+        "Señales de fraude incluyen: direcciones IP inconsistentes, documentos manipulados, y múltiples solicitudes desde el mismo dispositivo en menos de una hora.",
+        "El score de crédito mínimo para aprobación automática es 680 puntos. Entre 600 y 679 puntos el caso pasa a revisión manual por un analista."
+      ],
+      "coverage": 0.5
+    },
+    {
+      "id": "q07",
+      "query": "¿Qué métodos usa la verificación de identidad?",
+      "retrievedTexts": [
+        "La verificación de identidad combina biometría facial con la consulta de listas de sanciones y validación documental del documento de identidad.",
+        "El umbral de similitud facial para confirmar identidad es de 0.90. Por debajo de 0.60 la verificación falla y se solicita un nuevo intento.",
+        "La exposición total por cliente no puede superar el 15 por ciento del patrimonio técnico de la entidad, incluyendo crédito, leasing y avales."
+      ],
+      "coverage": 0.6666666666666666
+    },
+    {
+      "id": "q08",
+      "query": "¿Cuál es el umbral de similitud facial para confirmar identidad?",
+      "retrievedTexts": [
+        "El umbral de similitud facial para confirmar identidad es de 0.90. Por debajo de 0.60 la verificación falla y se solicita un nuevo intento.",
+        "La verificación de identidad combina biometría facial con la consulta de listas de sanciones y validación documental del documento de identidad.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo."
+      ],
+      "coverage": 0.8571428571428571
+    },
+    {
+      "id": "q09",
+      "query": "¿Qué documentos de identidad se aceptan?",
+      "retrievedTexts": [
+        "Los documentos aceptados son cédula, pasaporte y licencia de conducir. No se aceptan documentos vencidos ni fotografías de pantalla.",
+        "La verificación de identidad combina biometría facial con la consulta de listas de sanciones y validación documental del documento de identidad.",
+        "El umbral de similitud facial para confirmar identidad es de 0.90. Por debajo de 0.60 la verificación falla y se solicita un nuevo intento."
+      ],
+      "coverage": 1
+    },
+    {
+      "id": "q10",
+      "query": "¿Cómo se segmenta la estrategia de cobranza por días de mora?",
+      "retrievedTexts": [
+        "La estrategia de cobranza se segmenta por días de mora: de 1 a 7 días tono suave, de 8 a 30 días tono firme, y más de 30 días tono urgente con escalamiento.",
+        "La tasa de interés de mora para créditos de consumo es del 12 por ciento efectivo anual. Esta tasa se aplica únicamente sobre el saldo vencido.",
+        "El cupo de una tarjeta de crédito se calcula como 2.5 veces el ingreso mensual comprobado, con un tope de treinta millones de pesos."
+      ],
+      "coverage": 0.8333333333333334
+    },
+    {
+      "id": "q11",
+      "query": "¿Cuál es el monto máximo de un crédito de consumo?",
+      "retrievedTexts": [
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble."
+      ],
+      "coverage": 0.8
+    },
+    {
+      "id": "q12",
+      "query": "¿Cómo se calcula el cupo de una tarjeta de crédito?",
+      "retrievedTexts": [
+        "El cupo de una tarjeta de crédito se calcula como 2.5 veces el ingreso mensual comprobado, con un tope de treinta millones de pesos.",
+        "Señales de fraude incluyen: direcciones IP inconsistentes, documentos manipulados, y múltiples solicitudes desde el mismo dispositivo en menos de una hora.",
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito."
+      ],
+      "coverage": 0.8
+    },
+    {
+      "id": "q13",
+      "query": "¿Qué requisitos y qué score se necesitan para que un crédito de consumo sea aprobado sin revisión?",
+      "retrievedTexts": [
+        "El score de crédito mínimo para aprobación automática es 680 puntos. Entre 600 y 679 puntos el caso pasa a revisión manual por un analista.",
+        "Un reporte de sanciones internacionales o la aparición en listas PEP es causa de rechazo automático, sin importar el score de crédito.",
+        "Para solicitar un crédito de consumo el cliente debe presentar identificación oficial vigente, comprobante de ingresos de los últimos tres meses y no estar reportado en centrales de riesgo."
+      ],
+      "coverage": 0.625
+    },
+    {
+      "id": "q14",
+      "query": "¿En qué casos una verificación de identidad termina en revisión manual?",
+      "retrievedTexts": [
+        "La verificación de identidad combina biometría facial con la consulta de listas de sanciones y validación documental del documento de identidad.",
+        "El umbral de similitud facial para confirmar identidad es de 0.90. Por debajo de 0.60 la verificación falla y se solicita un nuevo intento.",
+        "Señales de fraude incluyen: direcciones IP inconsistentes, documentos manipulados, y múltiples solicitudes desde el mismo dispositivo en menos de una hora."
+      ],
+      "coverage": 0.3333333333333333
+    },
+    {
+      "id": "q15",
+      "query": "¿Cuál es el monto máximo de consumo y cuándo se requiere el comité de crédito?",
+      "retrievedTexts": [
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble."
+      ],
+      "coverage": 0.75
+    },
+    {
+      "id": "q16",
+      "query": "¿Qué señales indican fraude en una solicitud?",
+      "retrievedTexts": [
+        "Señales de fraude incluyen: direcciones IP inconsistentes, documentos manipulados, y múltiples solicitudes desde el mismo dispositivo en menos de una hora.",
+        "El cupo de una tarjeta de crédito se calcula como 2.5 veces el ingreso mensual comprobado, con un tope de treinta millones de pesos.",
+        "Un reporte de sanciones internacionales o la aparición en listas PEP es causa de rechazo automático, sin importar el score de crédito."
+      ],
+      "coverage": 0.75
+    },
+    {
+      "id": "q17",
+      "query": "¿Cuál es la exposición máxima por cliente frente al patrimonio técnico?",
+      "retrievedTexts": [
+        "La exposición total por cliente no puede superar el 15 por ciento del patrimonio técnico de la entidad, incluyendo crédito, leasing y avales.",
+        "La tasa de interés de mora para créditos de consumo es del 12 por ciento efectivo anual. Esta tasa se aplica únicamente sobre el saldo vencido.",
+        "El umbral de similitud facial para confirmar identidad es de 0.90. Por debajo de 0.60 la verificación falla y se solicita un nuevo intento."
+      ],
+      "coverage": 0.5714285714285714
+    },
+    {
+      "id": "q18",
+      "query": "Compara el plazo máximo de un crédito de consumo y el de un crédito hipotecario.",
+      "retrievedTexts": [
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble.",
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito."
+      ],
+      "coverage": 0.8571428571428571
+    },
+    {
+      "id": "q19",
+      "query": "¿Qué tasa, qué plazo máximo y qué monto máximo aplican a un crédito de consumo?",
+      "retrievedTexts": [
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito.",
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble."
+      ],
+      "coverage": 0.75
+    },
+    {
+      "id": "q20",
+      "query": "¿Cuántos clientes aprobados hubo el mes pasado?",
+      "retrievedTexts": [
+        "Los mensajes de cobranza se envían por canal digital con prioridad alta para clientes del segmento empresarial y montos superiores a diez millones.",
+        "El sistema marca como revisión manual cuando el score facial está entre 0.60 y 0.90 o cuando hay discrepancias entre el nombre del documento y el autorreportado.",
+        "El score de crédito mínimo para aprobación automática es 680 puntos. Entre 600 y 679 puntos el caso pasa a revisión manual por un analista."
+      ],
+      "coverage": 0.2
+    },
+    {
+      "id": "q21",
+      "query": "¿Quién es el director de marketing de la entidad?",
+      "retrievedTexts": [
+        "La exposición total por cliente no puede superar el 15 por ciento del patrimonio técnico de la entidad, incluyendo crédito, leasing y avales.",
+        "Un reporte de sanciones internacionales o la aparición en listas PEP es causa de rechazo automático, sin importar el score de crédito.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo."
+      ],
+      "coverage": 0.25
+    },
+    {
+      "id": "q22",
+      "query": "¿Cómo se prepara un risotto de setas?",
+      "retrievedTexts": [
+        "El cupo de una tarjeta de crédito se calcula como 2.5 veces el ingreso mensual comprobado, con un tope de treinta millones de pesos.",
+        "El umbral de similitud facial para confirmar identidad es de 0.90. Por debajo de 0.60 la verificación falla y se solicita un nuevo intento.",
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo."
+      ],
+      "coverage": 0
+    },
+    {
+      "id": "q23",
+      "query": "¿Cuál es el plazo mínimo de un crédito de consumo para montos altos?",
+      "retrievedTexts": [
+        "El plazo máximo de un crédito de consumo es de 60 meses. El plazo mínimo es de 6 meses para montos superiores a un salario mínimo.",
+        "Para crédito hipotecario el plazo máximo es de 20 años y se requiere un enganche mínimo del 20 por ciento del valor del inmueble.",
+        "El monto máximo de un crédito de consumo es de cincuenta millones de pesos. Montos superiores requieren aprobación del comité de crédito."
+      ],
+      "coverage": 0.75
+    },
+    {
+      "id": "q24",
+      "query": "¿Qué estrategia de cobranza se usa con un cliente empresarial que debe más de diez millones?",
+      "retrievedTexts": [
+        "Los mensajes de cobranza se envían por canal digital con prioridad alta para clientes del segmento empresarial y montos superiores a diez millones.",
+        "La estrategia de cobranza se segmenta por días de mora: de 1 a 7 días tono suave, de 8 a 30 días tono firme, y más de 30 días tono urgente con escalamiento.",
+        "Para solicitar un crédito de consumo el cliente debe presentar identificación oficial vigente, comprobante de ingresos de los últimos tres meses y no estar reportado en centrales de riesgo."
+      ],
+      "coverage": 1
+    }
+  ]
+}

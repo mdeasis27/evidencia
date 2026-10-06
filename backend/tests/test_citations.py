@@ -49,3 +49,15 @@ def test_verify_citations():
     )
     assert verdicts[0]["grounded"] is True and verdicts[0]["supported"] is True
     assert verdicts[1]["grounded"] is False and verdicts[1]["supported"] is False
+
+
+def test_query_coverage_matches_fixture():
+    import json
+    from pathlib import Path
+
+    from evidencia.citations import query_coverage, query_terms
+
+    assert query_terms("¿Cuál es el máximo de crédito?") == ["cuál", "máximo", "crédito"]
+    fixture = json.loads((Path(__file__).parent / "fixtures" / "coverage.json").read_text(encoding="utf-8"))
+    for q in fixture["questions"]:
+        assert query_coverage(q["query"], q["retrievedTexts"]) == q["coverage"]
