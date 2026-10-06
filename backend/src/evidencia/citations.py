@@ -68,3 +68,16 @@ def verify_citations(
             }
         )
     return verdicts
+
+
+def query_terms(query: str) -> list[str]:
+    """Question terms: 4+ letters or digits, accents kept. Mirrors lib/rag/coverage.ts."""
+    return re.findall(r"[^\W_]{4,}", query.lower())
+
+
+def query_coverage(query: str, retrieved_texts: Sequence[str]) -> float:
+    terms = query_terms(query)
+    if not terms:
+        return 0.0
+    text = " ".join(retrieved_texts).lower()
+    return sum(1 for t in terms if t in text) / len(terms)
