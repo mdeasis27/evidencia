@@ -1,0 +1,50 @@
+{
+  "repository": "evidencia",
+  "checks": [
+    {
+      "locale": "en",
+      "htmlLang": "en",
+      "buttons": [
+        "Retrieve evidence",
+        "Cancel",
+        "Reset",
+        "Play",
+        "Show all"
+      ],
+      "inputs": 4,
+      "clicked": "Retrieve evidence",
+      "traceEvents": 2,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    },
+    {
+      "locale": "es",
+      "htmlLang": "es",
+      "buttons": [
+        "Recuperar evidencia",
+        "Cancelar",
+        "Restaurar",
+        "Reproducir",
+        "Ver todo"
+      ],
+      "inputs": 4,
+      "clicked": "Recuperar evidencia",
+      "traceEvents": 2,
+      "keyboardFocus": "SELECT",
+      "editingInvalidatesEvidence": true,
+      "resetClearsResult": true,
+      "cancelUsable": true,
+      "languageSwitchWithoutStorage": true
+    }
+  ],
+  "errors": [],
+  "legacyRedirectRetainsQuery": true,
+  "unsupportedLocale404": true,
+  "translatedBodyDiffers": true,
+  "reducedMotionDisablesPlayback": true,
+  "mobileNoOverflow": true,
+  "noExternalOrApiRequests": true
+}

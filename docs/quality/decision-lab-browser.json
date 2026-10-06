@@ -1,0 +1,51 @@
+{
+  "repository": "evidencia",
+  "scope": "Real React component with controlled locale; Next routes not tested.",
+  "checks": [
+    {
+      "locale": "en",
+      "scenarios": [
+        {
+          "preset": "Supported claim\nA local passage is verifiable.",
+          "outcome": "Evidence-backed answer\n\nSupport is available in the help center. [local-1]"
+        },
+        {
+          "preset": "Missing evidence\nStrict mode refuses the claim.",
+          "outcome": "Evidence missing: review required\n\nI cannot support that claim from this local corpus."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    },
+    {
+      "locale": "es",
+      "scenarios": [
+        {
+          "preset": "Afirmación sustentada\nHay un pasaje local verificable.",
+          "outcome": "Respuesta respaldada\n\nEl soporte está disponible en el centro de ayuda. [local-1] Los cambios de facturación requieren aprobación. [local-2]"
+        },
+        {
+          "preset": "Evidencia ausente\nEl modo estricto rechaza la afirmación.",
+          "outcome": "Falta evidencia: requiere revisión\n\nEl corpus no sustenta la afirmación. La demo rechaza la respuesta en lugar de inventar información."
+        }
+      ],
+      "mobileNoOverflow": true,
+      "reducedMotion": true,
+      "keyboard": true,
+      "noRequests": true,
+      "sceneChangesWithScenario": true,
+      "editingClearsPresetAndTrace": true,
+      "resetRestoresFirstPreset": true,
+      "cancelControlPresent": true,
+      "presetRestoresAllInputs": true
+    }
+  ],
+  "errors": []
+}
