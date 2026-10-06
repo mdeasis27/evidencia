@@ -8,11 +8,11 @@ import type { DemoAdapter, TraceEvent } from "@/design-system/demo/types";
 
 type Question = { id: string; query: string; relevantChunkIds: string[]; answerable: boolean };
 export type AnswerStatus = "served" | "rerouted" | "lost";
-export type CheckedAnswer = { id: string; status: AnswerStatus };
+/** retrieved: passages opened, best first. coverage: share of the question they cover. relevant: passages that really hold the answer. */
+export type CheckedAnswer = { id: string; status: AnswerStatus; retrieved: string[]; coverage: number; relevant: string[] };
 export type MissionInput = { minCoverage: number };
 export type MissionResult = { items: CheckedAnswer[]; wrong: number; comparison: { mine: number; ungated: number } };
 
-const STEP = 6;
 const TOP_K = 3;
 const docs = corpus as { id: string; text: string }[];
 const hybrid = reciprocalRankFusion([bm25Retriever(docs), tfidfRetriever(docs)], docs);
@@ -26,9 +26,10 @@ export function checkAnswers(minCoverage: number): CheckedAnswer[] {
     const cited = verifyCitations(a.citations, a.retrieved, textOf).every((v) => v.grounded && v.supported);
     const coverage = queryCoverage(q.query, a.retrieved.map(textOf));
     const answered = a.status === "answered" && cited && coverage > 0 && coverage >= minCoverage;
-    if (!answered) return { id: q.id, status: "rerouted" };
+    const seen = { id: q.id, retrieved: a.retrieved, coverage, relevant: q.relevantChunkIds };
+    if (!answered) return { ...seen, status: "rerouted" };
     const rightPage = q.answerable && q.relevantChunkIds.some((id) => a.retrieved.includes(id));
-    return { id: q.id, status: rightPage ? "served" : "lost" };
+    return { ...seen, status: rightPage ? "served" : "lost" };
   });
 }
 
@@ -40,9 +41,9 @@ export const runMission: DemoAdapter<MissionInput, MissionResult> = async (input
   const startedAt = performance.now();
   const items = checkAnswers(input.minCoverage);
   const trace: TraceEvent[] = [];
-  for (let i = 0; i < items.length; i += STEP) {
+  for (const [i, q] of items.entries()) {
     if (signal.aborted) throw new DOMException("Aborted", "AbortError");
-    const event: TraceEvent = { id: `batch-${i / STEP + 1}`, step: i / STEP + 1, kind: "evidence", messageKey: `batch.${i / STEP + 1}`, timestampMs: performance.now() - startedAt, evidenceIds: items.slice(i, i + STEP).map((q) => q.id) };
+    const event: TraceEvent = { id: q.id, step: i + 1, kind: "evidence", messageKey: `answer.${q.status}`, timestampMs: performance.now() - startedAt, evidenceIds: [q.id, ...q.retrieved] };
     trace.push(event);
     onEvent(event);
   }

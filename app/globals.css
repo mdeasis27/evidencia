@@ -89,3 +89,7 @@
     font-weight: 600;
   }
 }
+
+/* Evidencia scene: each question replays its meter and verdict on mount. */
+@keyframes ev-grow { from { transform: scaleX(0); } }
+@keyframes ev-in { from { opacity: 0; transform: translateY(4px); } }

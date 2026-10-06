@@ -28,7 +28,7 @@ export function StoryPage() {
   const clear = () => { setPrediction(null); demo.reset(); };
   const reset = () => { setPct(DEFAULT_PCT); clear(); };
   const input = { minCoverage: pct / 100 };
-  const scene = (frame: typeof COMPLETE_FRAME) => result ? <EvidenciaStoryScene frame={frame} result={result} locale={locale} /> : null;
+  const scene = (frame: typeof COMPLETE_FRAME) => run && result ? <EvidenciaStoryScene frame={frame} result={result} minCoverage={run.input.minCoverage} locale={locale} /> : null;
 
   return <main className="mx-auto max-w-5xl px-5 py-8 text-foreground sm:py-12">
     <StoryHero name={t.name} oneLiner={t.oneLiner} chips={t.chips} />
