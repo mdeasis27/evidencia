@@ -4,7 +4,7 @@
 [![CI](https://github.com/mdeasis27/evidencia/actions/workflows/ci.yml/badge.svg)](https://github.com/mdeasis27/evidencia/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 <!-- /community-badges -->
 
-[Español](README.es.md) · [Try the demo](https://evidencia-manueldeasis27-2515s-projects.vercel.app/en/app) · [Case study](https://manueldeasis.com/en/projects/evidencia) · [Source](https://github.com/mdeasis27/evidencia)
+[Español](README.es.md) · [Try the demo](https://evidencia-manueldeasis27-2515s-projects.vercel.app/en/app) · [Case study](https://portafolio-mdea.vercel.app/en/projects/evidencia) · [Source](https://github.com/mdeasis27/evidencia)
 
 ![Actual interactive local interface](docs/images/cover.png)
 
